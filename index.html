@@ -1,0 +1,307 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Dashboard</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+
+        /* User Dashboard Container with Separate Background */
+
+        /* Unified Background for User Summary and Chart */
+        /* User Summary Section with Unified Background */
+        .user-summary {
+            margin-top: 30px; 
+            background-color: #D8E9A8; /* Light gray background */
+            border-radius: 15px; /* Rounded corners */
+            padding: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px; /* Spacing between user info and chart */
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 50px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        }
+        /* Remove default margin and padding from html and body */
+        html, body {
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box; /* Ensure consistent box sizing */
+        }
+
+        /* Responsive container */
+        .container {
+            width: 100%; /* Full width */
+            max-width: 1200px; /* Max width for larger screens */
+            margin: 0 auto; /* Center the container horizontally */
+            padding: 0 15px; /* Add some padding to prevent content from touching edges */
+        }
+        header {
+            margin-top: 50px;
+            background-color: #D8E9A8;
+            color:black; /* Text color */
+            padding: 20px; /* Padding around the header */
+            text-align: center; /* Center the text */
+            border-radius: 10px; /* Rounded corners */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+        }
+        /* Chart container */
+        .summary-chart {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            max-width: 400px; /* Limit size of the chart */
+        }
+
+        /* Chart canvas size adjustment */
+        .summary-chart canvas {
+            max-width: 300px; /* Reduce chart size */
+            margin: 0 auto;
+        }
+
+        /* Optional: Label styling inside chart */
+        .chart-label {
+            position: absolute;
+            font-size: 14px;
+            font-weight: bold;
+            color:#191A19;
+            white-space: nowrap;
+        }
+
+        /* Section Title Styling */
+        .user-info h2,
+        .summary-chart h2 {
+            margin-bottom: 10px;
+        }
+
+        .summary-card {
+            width: 300px;
+            text-align: center;
+            background-color: #D8E9A8; /* Light background color */
+            padding: 20px;
+            border-radius: 10px; /* Rounded corners */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+        }
+
+        .summary-card i {
+            font-size: 40px; /* Larger icon size */
+            color:#191A19; /* Icon color */
+        }
+
+        .summary-card h3 {
+            font-size: 1.25rem; /* Adjust the heading size */
+            margin: 10px 0; /* Space between icon and heading */
+        }
+
+        .summary-card p {
+            font-size: 1.5rem; /* Larger text for the count */
+            font-weight: bold; /* Make the number bold */
+            color:#191A19; /* Dark text color */
+        }
+
+        /* Post List Section */
+        .posts {
+            margin-top: 30px; /* Space between user summary and posts section */
+        }
+        p{
+            text-align: center;
+        }
+
+        .post-item {
+            display: flex;
+            justify-content: space-between; /* Space between title and buttons */
+            align-items: center; /* Align items vertically */
+            margin-bottom: 10px; /* Space between posts */
+            background-color: #D8E9A8;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .post-title-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 10px; /* Space between the buttons */
+        }
+
+        button {
+            padding: 5px 10px;
+            background-color:#191A19;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #495057;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>User Dashboard</h1>
+        </header>
+
+        <!-- User Summary Section -->
+        <section class="user-summary">
+            <div class="user-info">
+                <img src="u.jpg" alt="User Image">
+                <div>
+                    <h2>Welcome, User!</h2>
+                    <p>Here is your activity summary.</p>
+                </div>
+            </div>
+            <div class="summary-chart">
+                <h2>Summary Chart</h2>
+                <canvas id="summaryChart" width="300" height="300"></canvas>
+            </div>
+        </section>
+
+        <!-- User Activity Summary -->
+        <section class="summary d-flex justify-content-between">
+            <div class="summary-card" id="posts-summary">
+                <i class="fas fa-file-alt"></i>
+                <h3>Posts</h3>
+                <p>100</p>
+            </div>
+            <div class="summary-card" id="comments-summary">
+                <i class="fas fa-comments"></i>
+                <h3>Comments</h3>
+                <p>500</p>
+            </div>
+            <div class="summary-card" id="todos-summary">
+                <i class="fas fa-tasks"></i>
+                <h3>Todos</h3>
+                <p>200</p>
+            </div>
+        </section>
+
+        <!-- Posts Section -->
+        <section class="posts">
+            <h2>Posts</h2>
+            <div id="post-list"></div>
+        </section>
+
+        <footer>
+            <p>&copy; 2024 Professional Dashboard. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'https://jsonplaceholder.typicode.com';
+        const chartData = { posts: 0, comments: 0, todos: 0 };
+
+        async function fetchSummary() {
+            const [posts, comments, todos] = await Promise.all([
+                fetch(`${API_BASE_URL}/posts`).then(res => res.json()),
+                fetch(`${API_BASE_URL}/comments`).then(res => res.json()),
+                fetch(`${API_BASE_URL}/todos`).then(res => res.json())
+            ]);
+
+            chartData.posts = posts.length;
+            chartData.comments = comments.length;
+            chartData.todos = todos.length;
+
+            document.getElementById('posts-summary').querySelector('p').textContent = chartData.posts;
+            document.getElementById('comments-summary').querySelector('p').textContent = chartData.comments;
+            document.getElementById('todos-summary').querySelector('p').textContent = chartData.todos;
+
+            populatePosts(posts);
+            renderCharts(posts, comments, todos);
+        }
+
+        function populatePosts(posts) {
+            const postList = document.getElementById('post-list');
+            postList.innerHTML = '';
+
+            posts.forEach(post => {
+                const postItem = document.createElement('div');
+                postItem.classList.add('post-item');
+                postItem.id = `post-${post.id}`;
+
+                const postTitleContainer = document.createElement('div');
+                postTitleContainer.classList.add('post-title-container');
+
+                const postTitle = document.createElement('p');
+                postTitle.textContent = post.title;
+
+                const buttonContainer = document.createElement('div');
+                buttonContainer.classList.add('button-container');
+
+                const viewDetailsButton = document.createElement('button');
+                viewDetailsButton.textContent = 'View Details';
+                viewDetailsButton.addEventListener('click', () => {
+                    window.location.href = `post-details.html?postId=${post.id}`;
+                });
+
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Delete';
+                deleteButton.addEventListener('click', () => deletePost(post.id, postItem));
+
+                buttonContainer.appendChild(viewDetailsButton);
+                buttonContainer.appendChild(deleteButton);
+
+                postTitleContainer.appendChild(postTitle);
+                postTitleContainer.appendChild(buttonContainer);
+                postItem.appendChild(postTitleContainer);
+                postList.appendChild(postItem);
+            });
+        }
+
+        async function deletePost(postId, postElement) {
+            const response = await fetch(`${API_BASE_URL}/posts/${postId}`, { method: 'DELETE' });
+
+            if (response.ok) {
+                postElement.remove();
+                chartData.posts--;
+                document.getElementById('posts-summary').querySelector('p').textContent = chartData.posts;
+                alert('Post deleted successfully');
+            } else {
+                alert('Failed to delete post');
+            }
+        }
+
+        function renderCharts(posts, comments, todos) {
+            // Doughnut chart
+            const summaryCtx = document.getElementById('summaryChart').getContext('2d');
+            new Chart(summaryCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Posts', 'Comments', 'Todos'],
+                    datasets: [{
+                        label: 'User Activity Summary',
+                        data: [chartData.posts, chartData.comments, chartData.todos],
+                        backgroundColor: ['#541212', '#28A745', '#FFC107'],
+                        hoverBackgroundColor: ['#0056b3', '#1c7430', '#d39e00']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'top' }
+                    }
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchSummary);
+    </script>
+</body>
+</html>

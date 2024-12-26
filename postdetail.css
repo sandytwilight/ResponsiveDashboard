@@ -1,0 +1,23 @@
+body {
+    background-color: white;
+    font-family: Arial, sans-serif;
+    padding: 20px;
+}
+
+.container {
+    max-width: 800px;
+    margin: auto;
+    background: #D8E9A8;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary {
+    background-color: #191A19;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #191A19;
+}

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Details</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: white;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: #D8E9A8; 
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .btn-primary {
+            background-color: #191A19;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #191A19;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Post Details</h1>
+        <div id="post-details">
+            <h3 id="post-title"></h3>
+            <textarea id="post-body" rows="10" class="form-control mt-3"></textarea>
+        </div>
+        <button id="save-button" class="btn btn-primary mt-3">Save Changes</button>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'https://jsonplaceholder.typicode.com';
+        let post = null; // To store the fetched post details
+
+        // Function to fetch post details based on postId from query parameters
+        async function fetchPostDetails() {
+            const params = new URLSearchParams(window.location.search);
+            const postId = params.get('postId');
+
+            if (!postId) {
+                alert('Post ID is missing in the URL!');
+                window.location.href = 'index.html'; // Redirect back to the dashboard
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/posts/${postId}`);
+                if (!response.ok) throw new Error('Failed to fetch post details');
+                post = await response.json();
+
+                // Populate the UI with post details
+                document.getElementById('post-title').textContent = post.title;
+                document.getElementById('post-body').value = post.body;
+            } catch (error) {
+                console.error('Error fetching post details:', error);
+                alert('Error fetching post details.');
+                window.location.href = 'index.html'; // Redirect back to the dashboard
+            }
+        }
+
+        // Function to save post changes
+        async function savePostChanges() {
+            if (!post) {
+                alert('Post details are not loaded.');
+                return;
+            }
+
+            const updatedBody = document.getElementById('post-body').value;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/posts/${post.id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ ...post, body: updatedBody }),
+                });
+
+                if (response.ok) {
+                    // Store the updated post in localStorage
+                    const updatedPost = { ...post, body: updatedBody };
+                    localStorage.setItem(`updatedPost-${post.id}`, JSON.stringify(updatedPost));
+
+                    alert('Post updated successfully');
+                    window.location.href = 'index.html'; // Redirect to dashboard
+                } else {
+                    alert('Failed to update post');
+                }
+            } catch (error) {
+                console.error('Error saving changes:', error);
+                alert('Error saving changes.');
+            }
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchPostDetails(); // Fetch and display the post details
+            document.getElementById('save-button').addEventListener('click', savePostChanges);
+        });
+    </script>
+</body>
+</html>
